@@ -37,7 +37,7 @@ dependencies {
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1'
 
     // Swagger UI 및 OpenAPI 3 문서 자동 생성
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.4'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2'
 
     // JWT 생성 및 검증
     implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
