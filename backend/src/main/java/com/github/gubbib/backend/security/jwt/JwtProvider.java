@@ -1,6 +1,5 @@
 package com.github.gubbib.backend.security.jwt;
 
-import com.github.gubbib.backend.domain.user.entity.User;
 import com.github.gubbib.backend.exception.BusinessException;
 import com.github.gubbib.backend.exception.ErrorCode;
 import io.jsonwebtoken.*;

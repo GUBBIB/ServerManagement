@@ -1,6 +1,6 @@
 package com.github.gubbib.backend.security.service;
 
-import com.github.gubbib.backend.exception.BusinessException;
+import com.github.gubbib.backend.domain.user.service.UserService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
