@@ -1,0 +1,79 @@
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.9'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.github.GUBBIB'
+version = '0.0.1-SNAPSHOT'
+description = 'backend'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // Spring Boot 애플리케이션 상태 및 모니터링
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Spring Security 인증 및 인가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // DTO 및 요청 데이터 유효성 검증
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // REST API 및 Spring MVC
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+    // MyBatis SQL Mapper
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1'
+
+    // JWT 생성 및 검증
+    implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+
+    // Lombok 어노테이션 및 코드 자동 생성
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // 개발 환경 자동 재시작 및 편의 기능
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // MySQL JDBC 드라이버
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // Spring Boot Actuator 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
+
+    // Spring Security 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+
+    // 데이터 유효성 검증 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+
+    // Spring MVC 및 REST API 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+
+    // MyBatis Mapper 테스트
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:4.0.1'
+
+    // 테스트 환경 Lombok 지원
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // JUnit Platform 테스트 실행
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
