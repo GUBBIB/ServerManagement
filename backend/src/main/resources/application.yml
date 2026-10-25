@@ -10,17 +10,15 @@ spring:
     url: jdbc:mysql://localhost:3307/servermanagement
     driver-class-name: com.mysql.jdbc.Driver
 
-  jpa:
-    open-in-view: false
-    show_sql: false
-
-    hibernate:
-      ddl-auto: validate
-
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    default-statement-timeout: 30
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: 'NULL'
+    call-setters-on-nulls: true
+    auto-mapping-unknown-column-behavior: WARNING
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 logging:
   level:
