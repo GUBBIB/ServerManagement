@@ -37,3 +37,5 @@ out/
 .vscode/
 
 HELP.md
+
+application-local.yml
