@@ -75,6 +75,10 @@ dependencies {
 
     // JUnit Platform 테스트 실행
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Flyway
+    implementation 'org.springframework.boot:spring-boot-starter-flyway'
+    implementation 'org.flywaydb:flyway-mysql'
 }
 
 tasks.named('test') {
