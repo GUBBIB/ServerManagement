@@ -1,5 +1,7 @@
 package com.github.gubbib.backend.security.service;
 
+import com.github.gubbib.backend.domain.auth.DTO.AuthUserDTO;
+import com.github.gubbib.backend.domain.auth.service.AuthService;
 import com.github.gubbib.backend.domain.user.service.UserService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.HashMap;
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final AuthService authService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -29,12 +31,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("[+] CustomUserDetailsService - loadUserByUsername :: 회원 조회 요청 - email={}", username);
 
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("EMAIL", username);
+        AuthUserDTO user = authService.selectActiveAndPendingUserByEmail(username);
 
-        HashMap<String, Object> user = userService.selectActiveAndPendingUser(parameters);
-
-        if(user == null || user.isEmpty()){
+        if(user == null){
             logger.debug("[+] CustomUserDetailsService - loadUserByUsername :: 존재하지 않거나 비활성화된 회원 - email={}", username);
             throw new UsernameNotFoundException("존재하지 않거나 비활성화된 회원입니다.");
         }
