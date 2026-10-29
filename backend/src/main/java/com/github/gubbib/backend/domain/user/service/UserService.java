@@ -4,5 +4,4 @@ import java.util.HashMap;
 
 public interface UserService {
 
-    HashMap<String, Object> selectActiveAndPendingUser(HashMap<String, Object> parameters);
 }

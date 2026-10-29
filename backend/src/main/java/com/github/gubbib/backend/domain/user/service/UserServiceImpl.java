@@ -21,8 +21,5 @@ public class UserServiceImpl implements UserService {
     private final UserMapper usermapper;
 
 
-    @Override
-    public HashMap<String, Object> selectActiveAndPendingUser(HashMap<String, Object> parameters) {
-        return usermapper.selectActiveAndPendingUser(parameters);
-    }
+
 }
