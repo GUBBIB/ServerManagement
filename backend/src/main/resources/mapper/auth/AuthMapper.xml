@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.gubbib.backend.domain.user.mapper.AuthMapper">
+
+    <!-- status = [ ACTIVE, PENDING ] 인 유저 조회 -->
+    <select id="selectActiveAndPendingUserByEmail" parameterType="java.lang.String" resultType="com.github.gubbib.backend.domain.auth.DTO.AuthUserDTO">
+        SELECT USER_ID,
+               EMAIL,
+               PASSWORD,
+               NAME,
+               ROLE,
+               STATUS
+        FROM TB_USER_MANAGE
+        WHERE 1 = 1
+          AND EMAIL = #{EMAIL}
+          AND DELETED_AT IS NULL
+          AND STATUS IN ('ACTIVE', 'PENDING')
+    </select>
+
+    <select id="existsByEmail" parameterMap="java.lang.String" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT 1
+                      FROM TB_USER_MANAGE
+                      WHERE EMAIL = #{EMAIL}
+                        AND DELETE_AT IS NULL)
+    </select>
+
+</mapper>
