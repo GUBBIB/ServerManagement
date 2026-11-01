@@ -11,8 +11,8 @@
                TUB.NAME,
                TURM.ROLE,
                TUB.STATUS
-        FROM TB_USER_MANAGE TUB
-                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUB.USER_ID = TURM.USER_ID
+        FROM TB_USER_MANAGE TUM
+                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
         WHERE 1 = 1
           AND TUB.EMAIL = #{EMAIL}
           AND TUB.DELETED_AT IS NULL
@@ -58,8 +58,8 @@
                TUB.NAME,
                TURM.ROLE,
                TUB.STATUS
-        FROM TB_USER_MANAGE TUB
-                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUB.USER_ID = TURM.USER_ID
+        FROM TB_USER_MANAGE TUM
+                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
         WHERE TUB.EMAIL = #{EMAIL}
     </select>
 
