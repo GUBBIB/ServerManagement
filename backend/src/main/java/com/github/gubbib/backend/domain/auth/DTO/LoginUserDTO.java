@@ -1,6 +1,6 @@
 package com.github.gubbib.backend.domain.auth.DTO;
 
-public record AuthUserDTO(
+public record LoginUserDTO(
         String user_id,
         String email,
         String password,
