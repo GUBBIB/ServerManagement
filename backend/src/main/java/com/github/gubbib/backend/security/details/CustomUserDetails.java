@@ -18,16 +18,24 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        String role = user.role();
+        List<String> roles = user.roles();
         String status = user.status();
 
         if(status.equals("PENDING")){
             return List.of(new SimpleGrantedAuthority("ROLE_PENDING"));
         }
 
-        return List.of(
-                new SimpleGrantedAuthority("ROLE_" + role)
-        );
+        if (!"ACTIVE".equals(status)) {
+            return List.of();
+        }
+
+        if(roles == null){
+            return List.of();
+        }
+
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .toList();
     }
 
     @Override
@@ -41,6 +49,6 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public Long getId(){
-        return Long.parseLong(user.user_id());
+        return (user.user_id());
     }
 }

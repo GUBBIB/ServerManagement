@@ -5,27 +5,29 @@
 
     <!-- status = [ ACTIVE, PENDING ] 인 유저 조회 -->
     <select id="selectActiveAndPendingUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
-        SELECT USER_ID,
-               EMAIL,
-               PASSWORD,
-               NAME,
-               ROLE,
-               STATUS
-        FROM TB_USER_MANAGE
+        SELECT TUB.USER_ID,
+               TUB.EMAIL,
+               TUB.PASSWORD,
+               TUB.NAME,
+               TURM.ROLE,
+               TUB.STATUS
+        FROM TB_USER_MANAGE TUB
+                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUB.USER_ID = TURM.USER_ID
         WHERE 1 = 1
-          AND EMAIL = #{EMAIL}
-          AND DELETED_AT IS NULL
-          AND STATUS IN ('ACTIVE', 'PENDING')
+          AND TUB.EMAIL = #{EMAIL}
+          AND TUB.DELETED_AT IS NULL
+          AND TUB.STATUS IN ('ACTIVE', 'PENDING')
     </select>
 
+    <!-- 유저 존재 여부 조회 - 이메일  -->
     <select id="existsByEmail" resultType="java.lang.Boolean">
         SELECT EXISTS(SELECT 1
                       FROM TB_USER_MANAGE
-                      WHERE EMAIL = #{EMAIL}
-                        AND DELETE_AT IS NULL)
+                      WHERE EMAIL = #{EMAIL})
     </select>
 
-    <insert id="insertSignupRequest">
+    <!-- 회원가입 - 유저 삽입 -->
+    <insert id="insertSignupUser" useGeneratedKeys="true" keyProperty="userId" keyColumn="USER_ID">
         INSERT INTO TB_USER_MANAGE
         (EMAIL,
          PASSWORD,
@@ -37,16 +39,28 @@
                 #{REQUEST_DTO.phone})
     </insert>
 
+    <!-- 회원가입 - 유저 역할 삽입 -->
+    <insert id="insertSignupRole">
+        INSERT INTO TB_USER_ROLE_MANAGE
+        (USER_ID,
+         ROLE_CODE,
+         CREATED_BY)
+        VALUES (#{USER_ID},
+                'USER',
+                NULL)
+    </insert>
+
+    <!-- 유저 조회 - 이메일 -->
     <select id="selectUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
-        SELECT
-            USER_ID,
-            EMAIL,
-            PASSWORD,
-            NAME,
-            ROLE,
-            STATUS
-        FROM TB_USER_MANAGE
-        WHERE EMAIL = #{EMAIL}
+        SELECT TUB.USER_ID,
+               TUB.EMAIL,
+               TUB.PASSWORD,
+               TUB.NAME,
+               TURM.ROLE,
+               TUB.STATUS
+        FROM TB_USER_MANAGE TUB
+                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUB.USER_ID = TURM.USER_ID
+        WHERE TUB.EMAIL = #{EMAIL}
     </select>
 
 </mapper>

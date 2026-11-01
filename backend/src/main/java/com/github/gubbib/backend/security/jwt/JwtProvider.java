@@ -38,7 +38,7 @@ public class JwtProvider {
 
         String accessToken = Jwts.builder()
                 .subject(loginUserDTO.email())
-                .claim("role", loginUserDTO.role())
+                .claim("roles", loginUserDTO.roles())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiration))
                 .signWith(secretKey, Jwts.SIG.HS256)

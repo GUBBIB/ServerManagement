@@ -1,11 +1,13 @@
 package com.github.gubbib.backend.domain.auth.DTO;
 
+import java.util.List;
+
 public record LoginUserDTO(
-        String user_id,
+        Long user_id,
         String email,
         String password,
         String name,
-        String role,
+        List<String> roles,
         String status
 ) {
 }
