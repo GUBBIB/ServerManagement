@@ -1,8 +1,7 @@
 package com.github.gubbib.backend.security.service;
 
-import com.github.gubbib.backend.domain.auth.DTO.AuthUserDTO;
+import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.auth.service.AuthService;
-import com.github.gubbib.backend.domain.user.service.UserService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("[+] CustomUserDetailsService - loadUserByUsername :: 회원 조회 요청 - email={}", username);
 
-        AuthUserDTO user = authService.selectActiveAndPendingUserByEmail(username);
+        LoginUserDTO user = authService.selectActiveAndPendingUserByEmail(username);
 
         if(user == null){
             logger.debug("[+] CustomUserDetailsService - loadUserByUsername :: 존재하지 않거나 비활성화된 회원 - email={}", username);
