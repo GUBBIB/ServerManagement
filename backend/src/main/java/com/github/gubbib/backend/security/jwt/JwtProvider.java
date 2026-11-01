@@ -1,5 +1,6 @@
 package com.github.gubbib.backend.security.jwt;
 
+import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.exception.BusinessException;
 import com.github.gubbib.backend.exception.ErrorCode;
 import io.jsonwebtoken.*;
@@ -26,12 +27,8 @@ public class JwtProvider {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public String generateAccessToken(HashMap<String, Object> parameters) {
-
-        String email = parameters.get("EMAIL").toString();
-        String role = parameters.get("ROLE").toString();
-
-        logger.debug("[+] JwtProvider - generateAccessToken :: Access Token 생성 시작 - email={}", email);
+    public String generateAccessToken(LoginUserDTO loginUserDTO) {
+        logger.debug("[+] JwtProvider - generateAccessToken :: Access Token 생성 시작 - email={}", loginUserDTO.email());
 
         Instant now = Instant.now();
 
@@ -40,14 +37,14 @@ public class JwtProvider {
         );
 
         String accessToken = Jwts.builder()
-                .subject(email)
-                .claim("role", role)
+                .subject(loginUserDTO.email())
+                .claim("role", loginUserDTO.role())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiration))
                 .signWith(secretKey, Jwts.SIG.HS256)
                 .compact();
 
-        logger.debug("[+] JwtProvider - generateAccessToken :: Access Token 생성 완료 - email={}, expiration={}", email, expiration);
+        logger.debug("[+] JwtProvider - generateAccessToken :: Access Token 생성 완료 - email={}, expiration={}", loginUserDTO.email(), expiration);
 
         return accessToken;
     }
