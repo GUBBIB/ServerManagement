@@ -37,12 +37,11 @@ public class UserManageController {
     private final UserManageService userManageService;
 
     @PostMapping("/signup/approve")
-
     public ResponseEntity<ResultResponseDTO> signupApprove(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody @Valid SignupApproveRequestDTO requestDTO
     ) {
-        LoginUserDTO user = userManageService.signupApprove(requestDTO);
+        LoginUserDTO user = userManageService.signupApprove(userDetails, requestDTO);
 
         String message = String.format("회원가입 요청 완료\n 이메일: %s\n이름: %s", user.email(), user.name());
 
@@ -56,7 +55,7 @@ public class UserManageController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody @Valid SignupRejectRequestDTO requestDTO
     ) {
-        LoginUserDTO user = userManageService.signupReject(requestDTO);
+        LoginUserDTO user = userManageService.signupReject(userDetails, requestDTO);
 
         String message = String.format("회원가입 요청 반려\n 이메일: %s\n이름: %s\n 사유: %s\n", user.email(), user.name(), requestDTO.reason());
 
