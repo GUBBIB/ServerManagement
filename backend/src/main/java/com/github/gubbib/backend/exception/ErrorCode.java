@@ -28,11 +28,12 @@ public enum ErrorCode {
 
     // ===== AUTH ====
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "AUTH_001", "중복된 이메일입니다."),
+    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "AUTH_002", "이메일 또는 비밀번호가 올바르지 않습니다."),
 
     // ===== USER =====
-    MEMBER_ALREADY_EXISTS(HttpStatus.CONFLICT, "USER_001", "이미 존재하는 이메일입니다."),
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_002", "회원을 찾을 수 없습니다."),
-
+    USER_ALREADY_EXISTS(HttpStatus.CONFLICT, "USER_001", "이미 존재하는 이메일입니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_002", "회원을 찾을 수 없습니다."),
+    USER_()
 
 
     ;
