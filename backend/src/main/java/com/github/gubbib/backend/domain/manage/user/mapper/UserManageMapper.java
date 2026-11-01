@@ -1,4 +1,4 @@
-package com.github.gubbib.backend.domain.manage.mapper;
+package com.github.gubbib.backend.domain.manage.user.mapper;
 
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.auth.DTO.SignupRequestDTO;
@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface ManageMapper {
+public interface UserManageMapper {
     boolean existsByEmail(@Param("EMAIL") String email);
     LoginUserDTO selectActiveAndPendingUserByEmail(@Param("EMAIL") String email);
     void insertSignupRequest(@Param("REQUEST_DTO") SignupRequestDTO requestDTO, @Param("ENCODED_PASSWORD") String encodedPassword);
