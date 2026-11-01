@@ -3,6 +3,30 @@
 
 <mapper namespace="com.github.gubbib.backend.domain.user.mapper.UserMapper">
 
+    <!-- 유저 조회 - EMAIL -->
+    <select id="selectUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
+        SELECT TUM.USER_ID,
+               TUM.EMAIL,
+               TUM.NAME,
+               TUM.PHONE,
+               TUM.STATUS,
+               TURM.ROLE
+        FROM TB_USER_MANAGE TUM
+        INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
+        WHERE TUM.EMAIL = #{EMAIL}
+    </select>
 
+    <!-- 유저 조회 - USER_ID -->
+    <select id="selectUserByUserId" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
+        SELECT TUM.USER_ID,
+               TUM.EMAIL,
+               TUM.NAME,
+               TUM.PHONE,
+               TUM.STATUS,
+               TURM.ROLE
+        FROM TB_USER_MANAGE TUM
+                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
+        WHERE TUM.USER_ID = #{USER_ID}
+    </select>
 
 </mapper>
