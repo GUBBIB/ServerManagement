@@ -1,6 +1,8 @@
 package com.github.gubbib.backend.domain.auth.controller;
 
 import com.github.gubbib.backend.common.DTO.ResultResponseDTO;
+import com.github.gubbib.backend.domain.auth.DTO.LoginRequestDTO;
+import com.github.gubbib.backend.domain.auth.DTO.LoginResponseDTO;
 import com.github.gubbib.backend.domain.auth.DTO.SignupRequestDTO;
 import com.github.gubbib.backend.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +35,17 @@ public class AuthController {
 
         return ResponseEntity.ok(
                 new ResultResponseDTO("회원가입 신청 성공")
+        );
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResultResponseDTO> login(
+            @RequestBody @Valid LoginRequestDTO requestDTO
+    ) {
+        LoginResponseDTO responseDTO = authService.login(requestDTO);
+
+        return ResponseEntity.ok(
+                new ResultResponseDTO("계정 확인 완료", responseDTO)
         );
     }
 }
