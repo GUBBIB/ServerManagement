@@ -4,7 +4,7 @@
 <mapper namespace="com.github.gubbib.backend.domain.user.mapper.AuthMapper">
 
     <!-- status = [ ACTIVE, PENDING ] 인 유저 조회 -->
-    <select id="selectActiveAndPendingUserByEmail" parameterType="java.lang.String" resultType="com.github.gubbib.backend.domain.auth.DTO.AuthUserDTO">
+    <select id="selectActiveAndPendingUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
         SELECT USER_ID,
                EMAIL,
                PASSWORD,
@@ -18,11 +18,35 @@
           AND STATUS IN ('ACTIVE', 'PENDING')
     </select>
 
-    <select id="existsByEmail" parameterMap="java.lang.String" resultType="java.lang.Boolean">
+    <select id="existsByEmail" resultType="java.lang.Boolean">
         SELECT EXISTS(SELECT 1
                       FROM TB_USER_MANAGE
                       WHERE EMAIL = #{EMAIL}
                         AND DELETE_AT IS NULL)
+    </select>
+
+    <insert id="insertSignupRequest">
+        INSERT INTO TB_USER_MANAGE
+        (EMAIL,
+         PASSWORD,
+         NAME,
+         PHONE)
+        VALUES (#{REQUEST_DTO.email},
+                #{ENCODED_PASSWORD},
+                #{REQUEST_DTO.name},
+                #{REQUEST_DTO.phone})
+    </insert>
+
+    <select id="selectUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
+        SELECT
+            USER_ID,
+            EMAIL,
+            PASSWORD,
+            NAME,
+            ROLE,
+            STATUS
+        FROM TB_USER_MANAGE
+        WHERE EMAIL = #{EMAIL}
     </select>
 
 </mapper>
