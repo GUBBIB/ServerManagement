@@ -48,4 +48,6 @@ public class AuthController {
                 new ResultResponseDTO("계정 확인 완료", responseDTO)
         );
     }
+
+    // TODO 로그아웃에 대해서 고민 - 프론트에서 토큰을 지우더라도 만료 전까지는 유효한 토큰이기에 탈취된 토큰으로 API 요청이 가능함.
 }
