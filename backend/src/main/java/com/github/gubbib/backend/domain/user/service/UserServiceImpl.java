@@ -32,12 +32,24 @@ public class UserServiceImpl implements UserService {
         this.batchSqlSessionTemplate = batchSqlSessionTemplate;
     }
 
+    /**
+     * [ 회원 조회 - USER_ID ]
+     *
+     * @param userId
+     * @return
+     */
     @Override
     public LoginUserDTO selectUserByUserId(Long userId) {
         return usermapper.selectUserByUserId(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
+    /**
+     * [ 회원 조회 - EMAIL ]
+     *
+     * @param email
+     * @return
+     */
     @Override
     public LoginUserDTO selectUserByEmail(String email) {
         return usermapper.selectUserByEmail(email)
