@@ -84,6 +84,12 @@ public class AuthServiceImpl implements AuthService {
         authMapper.insertSignupRequest(requestDTO, encodedPassword);
     }
 
+    /**
+     * [ 로그인 ]
+     *
+     * @param requestDTO email, password
+     * @return
+     */
     @Override
     public LoginResponseDTO login(LoginRequestDTO requestDTO) {
 
