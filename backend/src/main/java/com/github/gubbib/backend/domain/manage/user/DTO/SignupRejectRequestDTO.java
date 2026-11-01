@@ -1,4 +1,4 @@
-package com.github.gubbib.backend.domain.manage.DTO;
+package com.github.gubbib.backend.domain.manage.user.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 
