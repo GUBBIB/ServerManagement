@@ -63,4 +63,16 @@
         WHERE TUM.EMAIL = #{EMAIL}
     </select>
 
+    <!-- 회원가입 상태 조회 -->
+    <select id="selectSignupStatus" resultType="com.github.gubbib.backend.domain.auth.DTO.SignupStatusResponseDTO">
+        SELECT
+            USER_ID,
+            EMAIL,
+            NAME,
+            STATUS,
+            REJECTION_REASON
+        FROM TB_USER_MANAGE
+        WHERE USER_ID = #{USER_DETAILS.user_id}
+    </select>
+
 </mapper>

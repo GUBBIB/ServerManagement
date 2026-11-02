@@ -1,12 +1,10 @@
 package com.github.gubbib.backend.domain.auth.service;
 
-import com.github.gubbib.backend.domain.auth.DTO.LoginResponseDTO;
-import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
-import com.github.gubbib.backend.domain.auth.DTO.LoginRequestDTO;
-import com.github.gubbib.backend.domain.auth.DTO.SignupRequestDTO;
+import com.github.gubbib.backend.domain.auth.DTO.*;
 import com.github.gubbib.backend.domain.auth.mapper.AuthMapper;
 import com.github.gubbib.backend.exception.BusinessException;
 import com.github.gubbib.backend.exception.ErrorCode;
+import com.github.gubbib.backend.security.details.CustomUserDetails;
 import com.github.gubbib.backend.security.jwt.JwtProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -15,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.cfg.MapperBuilder;
 
 @Service
 @Slf4j
@@ -30,19 +29,21 @@ public class AuthServiceImpl implements AuthService {
     private final AuthMapper authMapper;
     // Batch Mapper
     private final SqlSessionTemplate batchSqlSessionTemplate;
+    private final MapperBuilder mapperBuilder;
 
     public AuthServiceImpl(
             PasswordEncoder passwordEncoder,
             JwtProvider jwtProvider,
 
             AuthMapper authMapper,
-            SqlSessionTemplate batchSqlSessionTemplate
-    ) {
+            SqlSessionTemplate batchSqlSessionTemplate,
+            MapperBuilder mapperBuilder) {
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
 
         this.authMapper = authMapper;
         this.batchSqlSessionTemplate = batchSqlSessionTemplate;
+        this.mapperBuilder = mapperBuilder;
     }
 
     /**
@@ -117,5 +118,16 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtProvider.generateAccessToken(user);
 
         return new LoginResponseDTO(user.status(), message, accessToken, jwtProvider.getAccessTokenExpiration());
+    }
+
+    /**
+     * [ 회원가입 상태 조회 ]
+     *
+     * @param userDetails
+     * @return
+     */
+    @Override
+    public SignupStatusResponseDTO selectSignupStatus(CustomUserDetails userDetails) {
+        return authMapper.selectSignupStatus(userDetails);
     }
 }
