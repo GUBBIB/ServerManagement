@@ -1,19 +1,17 @@
 package com.github.gubbib.backend.domain.manage.role.service;
 
-import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
-import com.github.gubbib.backend.domain.manage.role.DTO.SignupApproveRequestDTO;
-import com.github.gubbib.backend.domain.manage.role.DTO.SignupRejectRequestDTO;
-import com.github.gubbib.backend.domain.manage.role.DTO.UserStatusUpdateRequestDTO;
+import com.github.gubbib.backend.domain.manage.role.DTO.RoleListResponseDTO;
 import com.github.gubbib.backend.domain.manage.role.mapper.RoleManageMapper;
-import com.github.gubbib.backend.domain.user.service.UserService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.logging.Logger;
-import org.mybatis.logging.LoggerFactory;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -27,5 +25,29 @@ import org.springframework.transaction.annotation.Transactional;
         """)
 public class RoleManageServiceImpl implements RoleManageService {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    // 일반 Mapper
+    private final RoleManageMapper roleManageMapper;
+    // Batch Mapper
+    private final SqlSessionTemplate batchSqlSessionTemplate;
+
+    public RoleManageServiceImpl(
+            RoleManageMapper roleManageMapper,
+            SqlSessionTemplate batchSqlSessionTemplate
+    ) {
+        this.roleManageMapper = roleManageMapper;
+        this.batchSqlSessionTemplate = batchSqlSessionTemplate;
+    }
+
+    /**
+     * [ 역할 목록 조회 ]
+     *
+     * @param userDetails
+     * @return
+     */
+    @Override
+    public List<RoleListResponseDTO> selectRoleList(CustomUserDetails userDetails) {
+        return roleManageMapper.selectRoleList(userDetails);
+    }
 }

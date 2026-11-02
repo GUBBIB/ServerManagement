@@ -3,4 +3,14 @@
 
 <mapper namespace="com.github.gubbib.backend.domain.user.mapper.RoleManageMapper">
 
+    <!-- 역할 목록 조회 -->
+    <select id="selectRoleList" resultType="com.github.gubbib.backend.domain.manage.role.DTO.RoleListResponseDTO">
+        SELECT ROLE_CODE,
+               ROLE_NAME,
+               DESCRIPTION,
+               USE_YN
+        FROM TB_ROLE_MANAGE
+        WHERE DELETED_AT IS NULL
+        ORDER BY ROLE_CODE
+    </select>
 </mapper>
