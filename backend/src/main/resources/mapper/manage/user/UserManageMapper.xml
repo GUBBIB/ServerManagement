@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.gubbib.backend.domain.user.mapper.UserManageMapper">
+
+    <!-- 회원가입 요청 승인 -->
+    <update id="updateSignupApprove">
+        UPDATE TB_USER_MANAGE
+        SET STATUS = 'ACTIVE',
+
+            UPDATED_AT = NOW(),
+            UPDATED_BY = #{USER_DETAILS.user.user_id}
+        WHERE USER_ID = #{REQUEST_DTO.user_id}
+    </update>
+
+    <!-- 회원가입 요청 반려 -->
+    <update id="updateSignupReject">
+        UPDATE TB_USER_MANAGE
+        SET STATUS = 'REJECT',
+            REJECTION_REASON = #{REQUEST_DTO.reason},
+
+            UPDATED_AT = NOW(),
+            UPDATED_BY = #{USER_DETAILS.user.user_id}
+        WHERE USER_ID = #{REQUEST_DTO.user_id}
+    </update>
+
+</mapper>

@@ -3,9 +3,10 @@ package com.github.gubbib.backend.domain.manage.user.service;
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupApproveRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupRejectRequestDTO;
+import com.github.gubbib.backend.security.details.CustomUserDetails;
 
 public interface UserManageService {
 
-    LoginUserDTO signupApprove(SignupApproveRequestDTO requestDTO);
-    LoginUserDTO signupReject(SignupRejectRequestDTO requestDTO);
+    LoginUserDTO signupApprove(CustomUserDetails userDetails, SignupApproveRequestDTO requestDTO);
+    LoginUserDTO signupReject(CustomUserDetails userDetails, SignupRejectRequestDTO requestDTO);
 }
