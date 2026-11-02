@@ -24,4 +24,14 @@
         WHERE USER_ID = #{REQUEST_DTO.user_id}
     </update>
 
+    <!-- 유저 상태 변경 -->
+    <update id="updateUserStatus">
+        UPDATE TB_USER_MANAGE
+        SET STATUS     = #{REQUEST_DTO.status},
+            
+            UPDATED_AT = NOW(),
+            UPDATED_BY = #{USER_DETAILS.user.user_id}
+        WHERE USER_IO = #{USER_ID}
+    </update>
+
 </mapper>

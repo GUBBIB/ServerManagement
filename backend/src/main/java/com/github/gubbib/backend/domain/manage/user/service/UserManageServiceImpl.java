@@ -3,6 +3,7 @@ package com.github.gubbib.backend.domain.manage.user.service;
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupApproveRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupRejectRequestDTO;
+import com.github.gubbib.backend.domain.manage.user.DTO.UserStatusUpdateRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.mapper.UserManageMapper;
 import com.github.gubbib.backend.domain.user.service.UserService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
@@ -45,6 +46,13 @@ public class UserManageServiceImpl implements UserManageService {
         this.batchSqlSessionTemplate = batchSqlSessionTemplate;
     }
 
+    /**
+     * [ 회원가입 요청 승인 ]
+     *
+     * @param userDetails
+     * @param requestDTO
+     * @return
+     */
     @Override
     @Transactional
     public LoginUserDTO signupApprove(CustomUserDetails userDetails, SignupApproveRequestDTO requestDTO) {
@@ -55,6 +63,13 @@ public class UserManageServiceImpl implements UserManageService {
         return user;
     }
 
+    /**
+     * [ 회원가입 요청 반려 ]
+     *
+     * @param userDetails
+     * @param requestDTO
+     * @return
+     */
     @Override
     @Transactional
     public LoginUserDTO signupReject(CustomUserDetails userDetails, SignupRejectRequestDTO requestDTO) {
@@ -63,5 +78,19 @@ public class UserManageServiceImpl implements UserManageService {
         userManageMapper.updateSignupReject(requestDTO, userDetails);
 
         return user;
+    }
+
+    /**
+     * [ 유저 상태 변경 ]
+     * @param userDetails
+     * @param userId
+     * @param requestDTO
+     * @return
+     */
+    @Override
+    public void updateUserStatus(CustomUserDetails userDetails, Long userId, UserStatusUpdateRequestDTO requestDTO) {
+        LoginUserDTO user = userService.selectUserByUserId(userId);
+
+        userManageMapper.updateUserStatus(requestDTO, userDetails, userId);
     }
 }
