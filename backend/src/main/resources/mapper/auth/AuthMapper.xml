@@ -5,18 +5,18 @@
 
     <!-- status = [ ACTIVE, PENDING ] 인 유저 조회 -->
     <select id="selectActiveAndPendingUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
-        SELECT TUB.USER_ID,
-               TUB.EMAIL,
-               TUB.PASSWORD,
-               TUB.NAME,
+        SELECT TUM.USER_ID,
+               TUM.EMAIL,
+               TUM.PASSWORD,
+               TUM.NAME,
                TURM.ROLE,
-               TUB.STATUS
+               TUM.STATUS
         FROM TB_USER_MANAGE TUM
                  INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
         WHERE 1 = 1
-          AND TUB.EMAIL = #{EMAIL}
-          AND TUB.DELETED_AT IS NULL
-          AND TUB.STATUS IN ('ACTIVE', 'PENDING')
+          AND TUM.EMAIL = #{EMAIL}
+          AND TUM.DELETED_AT IS NULL
+          AND TUM.STATUS IN ('ACTIVE', 'PENDING')
     </select>
 
     <!-- 유저 존재 여부 조회 - 이메일  -->
@@ -52,15 +52,15 @@
 
     <!-- 유저 조회 - 이메일 -->
     <select id="selectUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
-        SELECT TUB.USER_ID,
-               TUB.EMAIL,
-               TUB.PASSWORD,
-               TUB.NAME,
+        SELECT TUM.USER_ID,
+               TUM.EMAIL,
+               TUM.PASSWORD,
+               TUM.NAME,
                TURM.ROLE,
                TUB.STATUS
         FROM TB_USER_MANAGE TUM
                  INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
-        WHERE TUB.EMAIL = #{EMAIL}
+        WHERE TUM.EMAIL = #{EMAIL}
     </select>
 
 </mapper>
