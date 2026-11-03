@@ -1,8 +1,10 @@
 package com.github.gubbib.backend.domain.manage.role.service;
 
-import com.github.gubbib.backend.domain.manage.role.DTO.RoleCreateRequestDTO;
-import com.github.gubbib.backend.domain.manage.role.DTO.RoleListResponseDTO;
+import com.github.gubbib.backend.domain.manage.role.DTO.RoleSaveRequestDTO;
+import com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO;
 import com.github.gubbib.backend.domain.manage.role.mapper.RoleManageMapper;
+import com.github.gubbib.backend.exception.BusinessException;
+import com.github.gubbib.backend.exception.ErrorCode;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -41,6 +43,12 @@ public class RoleManageServiceImpl implements RoleManageService {
         this.batchSqlSessionTemplate = batchSqlSessionTemplate;
     }
 
+    @Override
+    public RoleResponseDTO selectRoleByRoleCode(String roleCode){
+        return roleManageMapper.selectRoleByRoleCode(roleCode)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ROLE_NOT_FOUND));
+    }
+
     /**
      * [ 역할 목록 조회 ]
      *
@@ -48,12 +56,34 @@ public class RoleManageServiceImpl implements RoleManageService {
      * @return
      */
     @Override
-    public List<RoleListResponseDTO> selectRoleList(CustomUserDetails userDetails) {
+    public List<RoleResponseDTO> selectRoleList(CustomUserDetails userDetails) {
         return roleManageMapper.selectRoleList(userDetails);
     }
 
+    /**
+     * [ 역할 추가 ]
+     *
+     * @param userDetails
+     * @param requestDTO
+     * @return
+     */
     @Override
-    public void insertRole(RoleCreateRequestDTO requestDTO, CustomUserDetails userDetails) {
+    public void insertRole(RoleSaveRequestDTO requestDTO, CustomUserDetails userDetails) {
         roleManageMapper.insertRole(requestDTO, userDetails);
+    }
+
+    /**
+     * [ 역할 수정 ]
+     *
+     * @param userDetails
+     * @param roleCode
+     * @param requestDTO
+     * @return
+     */
+    @Override
+    public void updateRole(RoleSaveRequestDTO requestDTO, String roleCode, CustomUserDetails userDetails) {
+        RoleResponseDTO roleResponseDTO = selectRoleByRoleCode(roleCode);
+
+        roleManageMapper.updateRole(requestDTO, roleCode, userDetails);
     }
 }

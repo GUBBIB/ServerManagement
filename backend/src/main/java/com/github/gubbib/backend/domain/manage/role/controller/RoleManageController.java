@@ -2,8 +2,8 @@ package com.github.gubbib.backend.domain.manage.role.controller;
 
 
 import com.github.gubbib.backend.common.DTO.ResultResponseDTO;
-import com.github.gubbib.backend.domain.manage.role.DTO.RoleCreateRequestDTO;
-import com.github.gubbib.backend.domain.manage.role.DTO.RoleListResponseDTO;
+import com.github.gubbib.backend.domain.manage.role.DTO.RoleSaveRequestDTO;
+import com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO;
 import com.github.gubbib.backend.domain.manage.role.service.RoleManageService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -15,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,22 +46,50 @@ public class RoleManageController {
     public ResponseEntity<ResultResponseDTO> getRoles(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        List<RoleListResponseDTO> roleListResponseDTO = roleManageService.selectRoleList(userDetails);
+        List<RoleResponseDTO> roleResponseDTO = roleManageService.selectRoleList(userDetails);
 
         return ResponseEntity.ok(
-                new ResultResponseDTO("역할 목록 조회", roleListResponseDTO)
+                new ResultResponseDTO("역할 목록 조회", roleResponseDTO)
         );
     }
 
+    /**
+     * [ 역할 추가 ]
+     *
+     * @param userDetails
+     * @param requestDTO
+     * @return
+     */
     @PostMapping("/")
     public ResponseEntity<ResultResponseDTO> createRole(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody @Valid RoleCreateRequestDTO requestDTO
+            @RequestBody @Valid RoleSaveRequestDTO requestDTO
     ) {
         roleManageService.insertRole(requestDTO, userDetails);
 
         return ResponseEntity.ok(
                 new ResultResponseDTO("역할 추가")
+        );
+    }
+
+    /**
+     * [ 역할 수정 ]
+     *
+     * @param userDetails
+     * @param roleCode
+     * @param requestDTO
+     * @return
+     */
+    @PatchMapping("/")
+    public ResponseEntity<ResultResponseDTO> updateRole(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam("roleCode") String roleCode,
+            @RequestBody @Valid RoleSaveRequestDTO requestDTO
+    ) {
+        roleManageService.updateRole(requestDTO, roleCode, userDetails);
+
+        return ResponseEntity.ok(
+                new ResultResponseDTO("역할 수정")
         );
     }
 

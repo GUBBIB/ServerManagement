@@ -1,6 +1,6 @@
 package com.github.gubbib.backend.domain.manage.role.DTO;
 
-public record RoleListResponseDTO(
+public record RoleResponseDTO(
         String role_code,
         String role_name,
         String description

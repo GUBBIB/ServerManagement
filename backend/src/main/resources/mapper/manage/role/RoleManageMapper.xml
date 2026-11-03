@@ -3,8 +3,18 @@
 
 <mapper namespace="com.github.gubbib.backend.domain.user.mapper.RoleManageMapper">
 
+    <!-- 역할 조회 - ROLE_CODE -->
+    <select id="selectRoleByRoleCode" resultType="com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO">
+        SELECT ROLE_CODE,
+               ROLE_NAME,
+               DESCRIPTION,
+               USE_YN
+        FROM TB_ROLE_MANAGE
+        WHERE DELETED_AT IS NULL
+    </select>
+
     <!-- 역할 목록 조회 -->
-    <select id="selectRoleList" resultType="com.github.gubbib.backend.domain.manage.role.DTO.RoleListResponseDTO">
+    <select id="selectRoleList" resultType="com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO">
         SELECT ROLE_CODE,
                ROLE_NAME,
                DESCRIPTION,
@@ -16,7 +26,7 @@
 
     <!-- 역할 추가 -->
     <insert id="insertRole">
-        INSERT INTO TB_ROLE_MANAGEA
+        INSERT INTO TB_ROLE_MANAGE
         (ROLE_CODE,
          ROLE_NAME,
          DESCRIPTION,
@@ -28,4 +38,16 @@
                 #{REQUEST_DTO.use_yn},
                 #{USER_DETAILS.user.user_id})
     </insert>
+
+    <!-- 역할 수정 -->
+    <update id="updateRole">
+        UPDATE TB_ROLE_MANAGE
+        SET ROLE_CODE = #{REQUEST_DTO.role_code},
+            ROLE_NAME = #{REQUEST_DTO.role_name},
+            DESCRIPTION = #{REQUEST_DTO.description},
+            USE_YN = #{REQUEST_DTO.use_yn},
+
+            UPDATED_BY = #{USER_DETAILS.user.user_id}
+        WHERE ROLE_CODE = #{ROLE_CODE}
+    </update>
 </mapper>
