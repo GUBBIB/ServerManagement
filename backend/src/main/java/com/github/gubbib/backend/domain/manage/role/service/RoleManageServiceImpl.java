@@ -1,5 +1,6 @@
 package com.github.gubbib.backend.domain.manage.role.service;
 
+import com.github.gubbib.backend.domain.manage.role.DTO.RoleCreateRequestDTO;
 import com.github.gubbib.backend.domain.manage.role.DTO.RoleListResponseDTO;
 import com.github.gubbib.backend.domain.manage.role.mapper.RoleManageMapper;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
@@ -49,5 +50,10 @@ public class RoleManageServiceImpl implements RoleManageService {
     @Override
     public List<RoleListResponseDTO> selectRoleList(CustomUserDetails userDetails) {
         return roleManageMapper.selectRoleList(userDetails);
+    }
+
+    @Override
+    public void insertRole(RoleCreateRequestDTO requestDTO, CustomUserDetails userDetails) {
+        roleManageMapper.insertRole(requestDTO, userDetails);
     }
 }

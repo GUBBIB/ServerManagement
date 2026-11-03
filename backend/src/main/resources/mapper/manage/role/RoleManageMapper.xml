@@ -13,4 +13,19 @@
         WHERE DELETED_AT IS NULL
         ORDER BY ROLE_CODE
     </select>
+
+    <!-- 역할 추가 -->
+    <insert id="insertRole">
+        INSERT INTO TB_ROLE_MANAGEA
+        (ROLE_CODE,
+         ROLE_NAME,
+         DESCRIPTION,
+         USE_YN,
+         CREATED_BY)
+        VALUES (#{REQUEST_DTO.role_code},
+                #{REQUEST_DTO.role_name},
+                #{REQUEST_DTO.description},
+                #{REQUEST_DTO.use_yn},
+                #{USER_DETAILS.user.user_id})
+    </insert>
 </mapper>

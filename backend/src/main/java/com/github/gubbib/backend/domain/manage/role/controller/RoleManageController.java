@@ -2,9 +2,11 @@ package com.github.gubbib.backend.domain.manage.role.controller;
 
 
 import com.github.gubbib.backend.common.DTO.ResultResponseDTO;
+import com.github.gubbib.backend.domain.manage.role.DTO.RoleCreateRequestDTO;
 import com.github.gubbib.backend.domain.manage.role.DTO.RoleListResponseDTO;
 import com.github.gubbib.backend.domain.manage.role.service.RoleManageService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -48,7 +52,19 @@ public class RoleManageController {
         List<RoleListResponseDTO> roleListResponseDTO = roleManageService.selectRoleList(userDetails);
 
         return ResponseEntity.ok(
-                new ResultResponseDTO("역할 목록 조회")
+                new ResultResponseDTO("역할 목록 조회", roleListResponseDTO)
+        );
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<ResultResponseDTO> createRole(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody @Valid RoleCreateRequestDTO requestDTO
+    ) {
+        roleManageService.insertRole(requestDTO, userDetails);
+
+        return ResponseEntity.ok(
+                new ResultResponseDTO("역할 추가")
         );
     }
 
