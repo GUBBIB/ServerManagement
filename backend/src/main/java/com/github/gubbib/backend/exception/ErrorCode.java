@@ -33,7 +33,9 @@ public enum ErrorCode {
     // ===== USER =====
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, "USER_001", "이미 존재하는 이메일입니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_002", "회원을 찾을 수 없습니다."),
-    USER_()
+
+    // ===== ROLE =====
+    ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ROLE_001", "ROLE을 찾을 수 없습니다."),
 
 
     ;
