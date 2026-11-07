@@ -19,3 +19,17 @@ CREATE TABLE TB_USER_MANAGE
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci
 COMMENT = '유저 관리 테이블';
+
+
+INSERT INTO TB_USER_MANAGE
+    (EMAIL, PASSWORD, NAME, PHONE, STATUS)
+VALUES ('admin1',
+        '$2b$12$Xf8WDRLvZ1uGoamCNgdqGOBU8UYdTGqtlHk5Wk8GWv4SuIdW.UZKe',
+        '개발 관리자 1',
+        '01000000001',
+        'ACTIVE'),
+       ('admin2',
+        '$2b$12$Xf8WDRLvZ1uGoamCNgdqGOBU8UYdTGqtlHk5Wk8GWv4SuIdW.UZKe',
+        '개발 관리자 2',
+        '01000000002',
+        'ACTIVE');
