@@ -5,7 +5,6 @@ import com.github.gubbib.backend.security.details.CustomUserDetails;
 
 public interface AuthService {
     void signupRequest(SignupRequestDTO requestDTO);
-    LoginUserDTO selectActiveAndPendingUserByEmail(String email);
     LoginResponseDTO login(LoginRequestDTO requestDTO);
     SignupStatusResponseDTO selectSignupStatus(CustomUserDetails userDetails);
 }

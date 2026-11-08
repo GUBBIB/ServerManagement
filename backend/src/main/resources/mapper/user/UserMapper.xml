@@ -3,30 +3,73 @@
 
 <mapper namespace="com.github.gubbib.backend.domain.user.mapper.UserMapper">
 
+    <!-- LoginUserDTO 생성자 매핑: record 선언 순서와 일치 -->
+    <resultMap id="loginUserResultMap"
+               type="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
+        <constructor>
+            <idArg column="USER_ID" javaType="java.lang.Long"/>
+            <arg column="EMAIL" javaType="java.lang.String"/>
+            <arg column="PASSWORD" javaType="java.lang.String"/>
+            <arg column="NAME" javaType="java.lang.String"/>
+            <arg column="STATUS" javaType="java.lang.String"/>
+
+            <arg column="USER_ID"
+                 javaType="java.util.List"
+                 select="selectRolesByUserId"/>
+        </constructor>
+    </resultMap>
+
+    <!-- 유저 역할 조회 -->
+    <select id="selectRolesByUserId"
+            parameterType="java.lang.Long"
+            resultType="java.lang.String">
+        SELECT ROLE_CODE
+        FROM TB_USER_ROLE_MANAGE
+        WHERE USER_ID = #{USER_ID}
+          AND DELETED_AT IS NULL
+        ORDER BY ROLE_CODE
+    </select>
+
+    <!-- status = [ ACTIVE, PENDING ] 인 유저 조회 -->
+    <select id="selectActiveAndPendingUserByEmail" resultMap="loginUserResultMap">
+        SELECT USER_ID,
+               EMAIL,
+               PASSWORD,
+               NAME,
+               STATUS
+        FROM TB_USER_MANAGE
+        WHERE EMAIL = #{EMAIL}
+          AND DELETED_AT IS NULL
+          AND STATUS IN ('ACTIVE', 'PENDING')
+    </select>
+
+    <!-- 유저 존재 여부 조회 - 이메일  -->
+    <select id="existsByEmail" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT 1
+                      FROM TB_USER_MANAGE
+                      WHERE EMAIL = #{EMAIL})
+    </select>
+
     <!-- 유저 조회 - EMAIL -->
-    <select id="selectUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
-        SELECT TUM.USER_ID,
-               TUM.EMAIL,
-               TUM.NAME,
-               TUM.PHONE,
-               TUM.STATUS,
-               TURM.ROLE
-        FROM TB_USER_MANAGE TUM
-        INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
-        WHERE TUM.EMAIL = #{EMAIL}
+    <select id="selectUserByEmail" resultMap="loginUserResultMap">
+        SELECT USER_ID,
+               EMAIL,
+               PASSWORD,
+               NAME,
+               STATUS
+        FROM TB_USER_MANAGE
+        WHERE EMAIL = #{EMAIL}
     </select>
 
     <!-- 유저 조회 - USER_ID -->
-    <select id="selectUserByUserId" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
-        SELECT TUM.USER_ID,
-               TUM.EMAIL,
-               TUM.NAME,
-               TUM.PHONE,
-               TUM.STATUS,
-               TURM.ROLE
-        FROM TB_USER_MANAGE TUM
-                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
-        WHERE TUM.USER_ID = #{USER_ID}
+    <select id="selectUserByUserId" resultMap="loginUserResultMap">
+        SELECT USER_ID,
+               EMAIL,
+               PASSWORD,
+               NAME,
+               STATUS
+        FROM TB_USER_MANAGE
+        WHERE USER_ID = #{USER_ID}
     </select>
 
 </mapper>

@@ -1,7 +1,7 @@
 package com.github.gubbib.backend.security.service;
 
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
-import com.github.gubbib.backend.domain.auth.service.AuthService;
+import com.github.gubbib.backend.domain.user.service.UserService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final AuthService authService;
+    private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -26,12 +26,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         저 String username 에는 member.getEmail() 값이 들어온다
     */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.debug("[+] CustomUserDetailsService - loadUserByUsername :: 회원 조회 요청 - email={}", username);
+        logger.debug("[+] CustomUserDetailsService - loadUserByUsername :: 회원 조회 요청 - email = {}", username);
 
-        LoginUserDTO user = authService.selectActiveAndPendingUserByEmail(username);
+        LoginUserDTO user = userService.selectUserByEmail(username);
 
         if(user == null){
-            logger.debug("[+] CustomUserDetailsService - loadUserByUsername :: 존재하지 않거나 비활성화된 회원 - email={}", username);
+            logger.debug("[+] CustomUserDetailsService - loadUserByUsername :: 존재하지 않거나 비활성화된 회원 - email = {}", username);
             throw new UsernameNotFoundException("존재하지 않거나 비활성화된 회원입니다.");
         }
 

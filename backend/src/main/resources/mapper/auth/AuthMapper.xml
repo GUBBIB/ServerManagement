@@ -1,33 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.github.gubbib.backend.domain.user.mapper.AuthMapper">
-
-    <!-- status = [ ACTIVE, PENDING ] 인 유저 조회 -->
-    <select id="selectActiveAndPendingUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
-        SELECT TUM.USER_ID,
-               TUM.EMAIL,
-               TUM.PASSWORD,
-               TUM.NAME,
-               TURM.ROLE,
-               TUM.STATUS
-        FROM TB_USER_MANAGE TUM
-                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
-        WHERE 1 = 1
-          AND TUM.EMAIL = #{EMAIL}
-          AND TUM.DELETED_AT IS NULL
-          AND TUM.STATUS IN ('ACTIVE', 'PENDING')
-    </select>
-
-    <!-- 유저 존재 여부 조회 - 이메일  -->
-    <select id="existsByEmail" resultType="java.lang.Boolean">
-        SELECT EXISTS(SELECT 1
-                      FROM TB_USER_MANAGE
-                      WHERE EMAIL = #{EMAIL})
-    </select>
+<mapper namespace="com.github.gubbib.backend.domain.auth.mapper.AuthMapper">
 
     <!-- 회원가입 - 유저 삽입 -->
-    <insert id="insertSignupUser" useGeneratedKeys="true" keyProperty="userId" keyColumn="USER_ID">
+    <insert id="insertSignupUser" useGeneratedKeys="true" keyProperty="GENERATED_KEY.USER_ID" keyColumn="USER_ID">
         INSERT INTO TB_USER_MANAGE
         (EMAIL,
          PASSWORD,
@@ -47,21 +24,10 @@
          CREATED_BY)
         VALUES (#{USER_ID},
                 'USER',
-                NULL)
+                (SELECT USER_ID
+                 FROM TB_USER_MANAGE
+                 WHERE EMAIL = 'admin'))
     </insert>
-
-    <!-- 유저 조회 - 이메일 -->
-    <select id="selectUserByEmail" resultType="com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO">
-        SELECT TUM.USER_ID,
-               TUM.EMAIL,
-               TUM.PASSWORD,
-               TUM.NAME,
-               TURM.ROLE,
-               TUB.STATUS
-        FROM TB_USER_MANAGE TUM
-                 INNER JOIN TB_USER_ROLE_MANAGE TURM ON TUM.USER_ID = TURM.USER_ID
-        WHERE TUM.EMAIL = #{EMAIL}
-    </select>
 
     <!-- 회원가입 상태 조회 -->
     <select id="selectSignupStatus" resultType="com.github.gubbib.backend.domain.auth.DTO.SignupStatusResponseDTO">
@@ -70,9 +36,9 @@
             EMAIL,
             NAME,
             STATUS,
-            REJECTION_REASON
+            REASON
         FROM TB_USER_MANAGE
-        WHERE USER_ID = #{USER_DETAILS.user_id}
+        WHERE USER_ID = #{USER_DETAILS.id}
     </select>
 
 </mapper>

@@ -12,4 +12,5 @@ public interface UserMapper {
 
     Optional<LoginUserDTO> selectUserByUserId(@Param("USER_ID") Long userId);
     Optional<LoginUserDTO> selectUserByEmail(@Param("EMAIL") String email);
+    LoginUserDTO selectActiveAndPendingUserByEmail(@Param("EMAIL") String email);
 }

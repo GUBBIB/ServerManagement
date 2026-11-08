@@ -35,6 +35,17 @@ public class UserManageController {
 
     private final UserManageService userManageService;
 
+    @GetMapping("/signup/")
+    public ResponseEntity<ResultResponseDTO> signupList(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+
+
+        return ResponseEntity.ok(
+                new ResultResponseDTO("회원가입 요청 목록 조회")
+        );
+    }
+
     /**
      * [ 회원가입 요청 승인 ]
      *

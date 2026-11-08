@@ -1,10 +1,10 @@
 package com.github.gubbib.backend.domain.user.service;
 
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
+import com.github.gubbib.backend.domain.role.service.RoleService;
 import com.github.gubbib.backend.domain.user.mapper.UserMapper;
 import com.github.gubbib.backend.exception.BusinessException;
 import com.github.gubbib.backend.exception.ErrorCode;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,26 +21,37 @@ public class UserServiceImpl implements UserService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final UserMapper usermapper;
+    private final UserMapper userMapper;
     private final SqlSessionTemplate batchSqlSessionTemplate;
 
     public UserServiceImpl(
-            UserMapper usermapper,
+            UserMapper userMapper,
             SqlSessionTemplate batchSqlSessionTemplate
     ) {
-        this.usermapper = usermapper;
+        this.userMapper = userMapper;
         this.batchSqlSessionTemplate = batchSqlSessionTemplate;
     }
 
     /**
-     * [ 회원 조회 - USER_ID ]
+     * [ 활성화 | 대기 유저 조회 By email ]
+     *
+     * @param email
+     * @return
+     */
+    @Override
+    public LoginUserDTO selectActiveAndPendingUserByEmail(String email) {
+        return userMapper.selectActiveAndPendingUserByEmail(email);
+    }
+
+    /**
+     * [ 회원 역할 조회 - USER_ID ]
      *
      * @param userId
      * @return
      */
     @Override
     public LoginUserDTO selectUserByUserId(Long userId) {
-        return usermapper.selectUserByUserId(userId)
+        return userMapper.selectUserByUserId(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
@@ -52,7 +63,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public LoginUserDTO selectUserByEmail(String email) {
-        return usermapper.selectUserByEmail(email)
+        return userMapper.selectUserByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 }

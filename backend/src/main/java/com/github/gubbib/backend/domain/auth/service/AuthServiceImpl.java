@@ -2,6 +2,7 @@ package com.github.gubbib.backend.domain.auth.service;
 
 import com.github.gubbib.backend.domain.auth.DTO.*;
 import com.github.gubbib.backend.domain.auth.mapper.AuthMapper;
+import com.github.gubbib.backend.domain.user.service.UserService;
 import com.github.gubbib.backend.exception.BusinessException;
 import com.github.gubbib.backend.exception.ErrorCode;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.cfg.MapperBuilder;
 
+import java.util.HashMap;
+
 @Service
 @Slf4j
 @Transactional(readOnly = true)
@@ -24,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final UserService userService;
 
     // 일반 Mapper
     private final AuthMapper authMapper;
@@ -34,12 +38,14 @@ public class AuthServiceImpl implements AuthService {
     public AuthServiceImpl(
             PasswordEncoder passwordEncoder,
             JwtProvider jwtProvider,
+            UserService userService,
 
             AuthMapper authMapper,
             SqlSessionTemplate batchSqlSessionTemplate,
             MapperBuilder mapperBuilder) {
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
+        this.userService = userService;
 
         this.authMapper = authMapper;
         this.batchSqlSessionTemplate = batchSqlSessionTemplate;
@@ -57,17 +63,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * [ 활성화 | 대기 유저 조회 By email ]
-     *
-     * @param email
-     * @return
-     */
-    @Override
-    public LoginUserDTO selectActiveAndPendingUserByEmail(String email) {
-        return authMapper.selectActiveAndPendingUserByEmail(email);
-    }
-
-    /**
      * [ 회원가입 신청 ]
      *
      * @param requestDTO 회원가입 신청 정보(email, password, name, phone)
@@ -82,7 +77,13 @@ public class AuthServiceImpl implements AuthService {
 
         String encodedPassword = encodingPassword(requestDTO.password());
 
-        authMapper.insertSignupRequest(requestDTO, encodedPassword);
+        HashMap<String, Object> generatedKey = new HashMap<>();
+
+        authMapper.insertSignupUser(requestDTO, encodedPassword, generatedKey);
+
+        Long userId = ((Number) generatedKey.get("USER_ID")).longValue();
+
+        authMapper.insertSignupRole(userId);
     }
 
     /**
@@ -93,8 +94,15 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public LoginResponseDTO login(LoginRequestDTO requestDTO) {
+        LoginUserDTO user = null;
 
-        LoginUserDTO user = authMapper.selectUserByEmail(requestDTO.email());
+        try {
+            user = userService.selectUserByEmail(requestDTO.email());
+        } catch (BusinessException e) {
+            if(e.getErrorCode() == ErrorCode.USER_NOT_FOUND){
+                throw new BusinessException(ErrorCode.INVALID_CREDENTIALS);
+            }
+        }
 
         if (user == null || !passwordEncoder.matches(requestDTO.password(), user.password())) {
             throw new BusinessException(ErrorCode.INVALID_CREDENTIALS);
@@ -111,11 +119,8 @@ public class AuthServiceImpl implements AuthService {
             default             -> throw new BusinessException(ErrorCode.INVALID_CREDENTIALS);
         };
 
-        if(!"ACTIVE".equals(user.status())){
-            return new LoginResponseDTO(user.status(), message, null, null);
-        }
-        // TODO JWT 발급 코드 추가
         String accessToken = jwtProvider.generateAccessToken(user);
+        logger.debug("[+] AuthServiceImpl - login :: Access Token 주입 완료 - email={}", user.email());
 
         return new LoginResponseDTO(user.status(), message, accessToken, jwtProvider.getAccessTokenExpiration());
     }
