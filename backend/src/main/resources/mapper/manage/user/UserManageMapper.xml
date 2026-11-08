@@ -3,22 +3,64 @@
 
 <mapper namespace="com.github.gubbib.backend.domain.manage.user.mapper.UserManageMapper">
 
-    <!-- 회원가입 요청 목록 조회 -->
-    <select id="selectSignupUserList" resultType="com.github.gubbib.backend.domain.manage.user.DTO.SignupUserListDTO">
-        SELECT USER_ID,
-               EMAIL,
-               NAME,
-               PHONE,
-               STATUS
+    <!-- 회원 검색 조건 -->
+    <sql id="searchType">
+        <if test="KEYWORD != null and KEYWORD != ''">
+            <choose>
+                <when test='SEARCH_TYPE == "EMAIL"'>
+                    AND EMAIL LIKE CONCAT('%', #{KEYWORD}, '%')
+                </when>
 
+                <when test='SEARCH_TYPE == "NAME"'>
+                    AND NAME LIKE CONCAT('%', #{KEYWORD}, '%')
+                </when>
+
+                <when test='SEARCH_TYPE == "PHONE"'>
+                    AND PHONE LIKE CONCAT('%', #{KEYWORD}, '%')
+                </when>
+
+                <otherwise>
+                    AND (
+                    EMAIL LIKE CONCAT('%', #{KEYWORD}, '%')
+                    OR NAME LIKE CONCAT('%', #{KEYWORD}, '%')
+                    OR PHONE LIKE CONCAT('%', #{KEYWORD}, '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
+
+    <!-- ================================================================================================================================================================================================================================================ -->
+
+    <!-- 회원가입 요청 목록 조회 -->
+    <select id="selectSignupUserList"
+            resultType="com.github.gubbib.backend.domain.manage.user.DTO.SignupUserListDTO">
+        SELECT USER_ID,
+        EMAIL,
+        NAME,
+        PHONE,
+        STATUS
         FROM TB_USER_MANAGE
         WHERE STATUS = 'PENDING'
+        AND DELETED_AT IS NULL
+        <include refid="searchType"/>
+        ORDER BY USER_ID DESC
+        LIMIT #{PER_PAGE} OFFSET #{OFFSET}
+    </select>
+
+    <!-- 회원가입 요청 전체 건수 조회 -->
+    <select id="countSignupUserList" resultType="long">
+        SELECT COUNT(*)
+        FROM TB_USER_MANAGE
+        WHERE STATUS = 'PENDING'
+        AND DELETED_AT IS NULL
+        <include refid="searchType"/>
     </select>
 
     <!-- 회원가입 요청 승인 -->
     <update id="updateSignupApprove">
         UPDATE TB_USER_MANAGE
-        SET STATUS = 'ACTIVE',
+        SET STATUS     = 'ACTIVE',
 
             UPDATED_AT = NOW(),
             UPDATED_BY = #{USER_DETAILS.user.user_id}
@@ -28,11 +70,11 @@
     <!-- 회원가입 요청 반려 -->
     <update id="updateSignupReject">
         UPDATE TB_USER_MANAGE
-        SET STATUS = 'REJECT',
+        SET STATUS           = 'REJECT',
             REJECTION_REASON = #{REQUEST_DTO.reason},
 
-            UPDATED_AT = NOW(),
-            UPDATED_BY = #{USER_DETAILS.user.user_id}
+            UPDATED_AT       = NOW(),
+            UPDATED_BY       = #{USER_DETAILS.user.user_id}
         WHERE USER_ID = #{REQUEST_DTO.user_id}
     </update>
 
@@ -40,7 +82,7 @@
     <update id="updateUserStatus">
         UPDATE TB_USER_MANAGE
         SET STATUS     = #{REQUEST_DTO.status},
-            
+
             UPDATED_AT = NOW(),
             UPDATED_BY = #{USER_DETAILS.user.user_id}
         WHERE USER_IO = #{USER_ID}

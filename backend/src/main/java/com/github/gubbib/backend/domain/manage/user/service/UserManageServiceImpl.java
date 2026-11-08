@@ -1,5 +1,6 @@
 package com.github.gubbib.backend.domain.manage.user.service;
 
+import com.github.gubbib.backend.common.DTO.PageResponseDTO;
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupApproveRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupRejectRequestDTO;
@@ -7,6 +8,8 @@ import com.github.gubbib.backend.domain.manage.user.DTO.SignupUserListDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.UserStatusUpdateRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.mapper.UserManageMapper;
 import com.github.gubbib.backend.domain.user.service.UserService;
+import com.github.gubbib.backend.exception.BusinessException;
+import com.github.gubbib.backend.exception.ErrorCode;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.logging.Logger;
@@ -56,8 +59,18 @@ public class UserManageServiceImpl implements UserManageService {
      * @return
      */
     @Override
-    public List<SignupUserListDTO> selectSignupUserList(CustomUserDetails userDetails) {
-        return userManageMapper.selectSignupUserList(userDetails);
+    public PageResponseDTO<SignupUserListDTO> selectSignupUserList(CustomUserDetails userDetails, int page, int perPage, String searchType, String keyword) {
+        if (page < 1 || perPage < 1) {
+            throw new BusinessException(ErrorCode.INVALID_PAGINATION);
+        }
+
+        long offset = ((long) page - 1) * perPage;
+
+        long totalCount = userManageMapper.countSignupUserList(searchType, keyword);
+
+        List<SignupUserListDTO> list = userManageMapper.selectSignupUserList(searchType, keyword, perPage, offset);
+
+        return new PageResponseDTO<>(totalCount, page, perPage, list);
     }
 
     /**

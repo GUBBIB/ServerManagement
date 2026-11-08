@@ -1,5 +1,6 @@
 package com.github.gubbib.backend.domain.manage.user.service;
 
+import com.github.gubbib.backend.common.DTO.PageResponseDTO;
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupApproveRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupRejectRequestDTO;
@@ -14,5 +15,5 @@ public interface UserManageService {
     LoginUserDTO signupApprove(CustomUserDetails userDetails, SignupApproveRequestDTO requestDTO);
     LoginUserDTO signupReject(CustomUserDetails userDetails, SignupRejectRequestDTO requestDTO);
     void updateUserStatus(CustomUserDetails userDetails, Long userId, UserStatusUpdateRequestDTO requestDTO);
-    List<SignupUserListDTO> selectSignupUserList(CustomUserDetails userDetails);
+    PageResponseDTO<SignupUserListDTO> selectSignupUserList(CustomUserDetails userDetails, int page, int perPage, String searchType, String keyword);
 }

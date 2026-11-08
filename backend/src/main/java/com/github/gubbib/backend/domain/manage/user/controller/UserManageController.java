@@ -1,5 +1,6 @@
 package com.github.gubbib.backend.domain.manage.user.controller;
 
+import com.github.gubbib.backend.common.DTO.PageResponseDTO;
 import com.github.gubbib.backend.common.DTO.ResultResponseDTO;
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupApproveRequestDTO;
@@ -42,16 +43,24 @@ public class UserManageController {
      * [ 회원가입 요청 목록 조회 ]
      *
      * @param userDetails
+     * @param page          : 조회 페이지
+     * @param perPage       : 조회 개수
+     * @param searchType    : 검색 타입 [ 전체 | 이름 | 이메일 | 휴대폰 번호 ]
+     * @param keyword       : 검색어
      * @return
      */
     @GetMapping("/signup/")
     public ResponseEntity<ResultResponseDTO> signupList(
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int perPage,
+            @RequestParam(defaultValue = "ALL") String searchType,
+            @RequestParam(defaultValue = "") String keyword
     ) {
-        List<SignupUserListDTO> signupUserList = userManageService.selectSignupUserList(userDetails);
+        PageResponseDTO<SignupUserListDTO> responseDTO = userManageService.selectSignupUserList(userDetails, page, perPage, searchType, keyword);
 
         return ResponseEntity.ok(
-                new ResultResponseDTO("회원가입 요청 목록 조회", signupUserList)
+                new ResultResponseDTO("회원가입 요청 목록 조회", responseDTO)
         );
     }
 
