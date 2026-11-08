@@ -80,16 +80,35 @@ public class RoleManageController {
      * @param requestDTO
      * @return
      */
-    @PatchMapping("/")
+    @PatchMapping("/{roleCode}")
     public ResponseEntity<ResultResponseDTO> updateRole(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam("roleCode") String roleCode,
+            @PathVariable("roleCode") String roleCode,
             @RequestBody @Valid RoleSaveRequestDTO requestDTO
     ) {
         roleManageService.updateRole(requestDTO, roleCode, userDetails);
 
         return ResponseEntity.ok(
                 new ResultResponseDTO("역할 수정")
+        );
+    }
+
+    /**
+     * [ 역할 논리적 삭제 ]
+     *
+     * @param userDetails
+     * @param roleCode
+     * @return
+     */
+    @DeleteMapping("/{roleCode}")
+    public ResponseEntity<ResultResponseDTO> deleteRole(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable("roleCode") String roleCode
+    ) {
+        roleManageService.deleteRole(roleCode, userDetails);
+
+        return ResponseEntity.ok(
+                new ResultResponseDTO("역할 삭제")
         );
     }
 

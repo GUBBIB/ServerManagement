@@ -16,4 +16,5 @@ public interface RoleManageMapper {
     void insertRole(@Param("REQUEST_DTO") RoleSaveRequestDTO requestDTO, @Param("USER_DETAILS") CustomUserDetails userDetails);
     Optional<RoleResponseDTO> selectRoleByRoleCode(@Param("ROLE_CODE") String roleCode);
     void updateRole(@Param("REQUEST_DTO") RoleSaveRequestDTO requestDTO, @Param("ROLE_CODE") String roleCode, @Param("USER_DETAILS") CustomUserDetails userDetails);
+    void deleteRole(@Param("ROLE_CODE") String roleCode, @Param("USER_DETAILS") CustomUserDetails userDetails);
 }

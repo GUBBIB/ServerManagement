@@ -13,5 +13,5 @@ public interface RoleManageService {
     void insertRole(@Valid RoleSaveRequestDTO requestDTO, CustomUserDetails userDetails);
     void updateRole(@Valid RoleSaveRequestDTO requestDTO, String roleCode, CustomUserDetails userDetails);
     RoleResponseDTO selectRoleByRoleCode(String roleCode);
-
+    void deleteRole(String roleCode, CustomUserDetails userDetails);
 }

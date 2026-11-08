@@ -86,4 +86,12 @@ public class RoleManageServiceImpl implements RoleManageService {
 
         roleManageMapper.updateRole(requestDTO, roleCode, userDetails);
     }
+
+
+    @Override
+    public void deleteRole(String roleCode, CustomUserDetails userDetails) {
+        RoleResponseDTO roleResponseDTO = selectRoleByRoleCode(roleCode);
+
+        roleManageMapper.deleteRole(roleCode, userDetails);
+    }
 }
