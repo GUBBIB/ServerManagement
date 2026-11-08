@@ -56,6 +56,10 @@ public class UserManageServiceImpl implements UserManageService {
      * [ 회원가입 요청 목록 조회 ]
      *
      * @param userDetails
+     * @param page          : 조회 페이지
+     * @param perPage       : 조회 개수
+     * @param searchType    : 검색 타입 [ 전체 | 이름 | 이메일 | 휴대폰 번호 ]
+     * @param keyword       : 검색어
      * @return
      */
     @Override
