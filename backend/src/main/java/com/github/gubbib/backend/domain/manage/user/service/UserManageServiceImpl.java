@@ -3,6 +3,7 @@ package com.github.gubbib.backend.domain.manage.user.service;
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupApproveRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupRejectRequestDTO;
+import com.github.gubbib.backend.domain.manage.user.DTO.SignupUserListDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.UserStatusUpdateRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.mapper.UserManageMapper;
 import com.github.gubbib.backend.domain.user.service.UserService;
@@ -14,6 +15,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -44,6 +47,17 @@ public class UserManageServiceImpl implements UserManageService {
         this.userService = userService;
         this.userManageMapper = userManageMapper;
         this.batchSqlSessionTemplate = batchSqlSessionTemplate;
+    }
+
+    /**
+     * [ 회원가입 요청 목록 조회 ]
+     *
+     * @param userDetails
+     * @return
+     */
+    @Override
+    public List<SignupUserListDTO> selectSignupUserList(CustomUserDetails userDetails) {
+        return userManageMapper.selectSignupUserList(userDetails);
     }
 
     /**

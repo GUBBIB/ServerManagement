@@ -4,6 +4,7 @@ import com.github.gubbib.backend.common.DTO.ResultResponseDTO;
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupApproveRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.SignupRejectRequestDTO;
+import com.github.gubbib.backend.domain.manage.user.DTO.SignupUserListDTO;
 import com.github.gubbib.backend.domain.manage.user.DTO.UserStatusUpdateRequestDTO;
 import com.github.gubbib.backend.domain.manage.user.service.UserManageService;
 import com.github.gubbib.backend.security.details.CustomUserDetails;
@@ -17,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,14 +38,20 @@ public class UserManageController {
 
     private final UserManageService userManageService;
 
+    /**
+     * [ 회원가입 요청 목록 조회 ]
+     *
+     * @param userDetails
+     * @return
+     */
     @GetMapping("/signup/")
     public ResponseEntity<ResultResponseDTO> signupList(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-
+        List<SignupUserListDTO> signupUserList = userManageService.selectSignupUserList(userDetails);
 
         return ResponseEntity.ok(
-                new ResultResponseDTO("회원가입 요청 목록 조회")
+                new ResultResponseDTO("회원가입 요청 목록 조회", signupUserList)
         );
     }
 
