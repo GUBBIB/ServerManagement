@@ -1,6 +1,7 @@
 package com.github.gubbib.backend.domain.manage.role.controller;
 
 
+import com.github.gubbib.backend.common.DTO.PageResponseDTO;
 import com.github.gubbib.backend.common.DTO.ResultResponseDTO;
 import com.github.gubbib.backend.domain.manage.role.DTO.RoleSaveRequestDTO;
 import com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO;
@@ -16,8 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,13 +39,30 @@ public class RoleManageController {
      * [ 역할 목록 조회 ]
      *
      * @param userDetails
+     * @param page          : 조회 페이지
+     * @param perPage       : 조회 개수
+     * @param searchType    : 검색 타입 [ 전체 | 역할명 | 역할 코드 ]
+     * @param keyword       : 검색어
+     * @param useYn         : 사용 여부
      * @return
      */
     @GetMapping("/")
     public ResponseEntity<ResultResponseDTO> getRoles(
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int perPage,
+            @RequestParam(defaultValue = "ALL") String searchType,
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "") String useYn
     ) {
-        List<RoleResponseDTO> roleResponseDTO = roleManageService.selectRoleList(userDetails);
+        PageResponseDTO<RoleResponseDTO> roleResponseDTO = roleManageService.selectRoleList(
+                userDetails,
+                page,
+                perPage,
+                searchType,
+                keyword,
+                useYn
+        );
 
         return ResponseEntity.ok(
                 new ResultResponseDTO("역할 목록 조회", roleResponseDTO)

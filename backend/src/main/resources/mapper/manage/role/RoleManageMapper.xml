@@ -3,6 +3,56 @@
 
 <mapper namespace="com.github.gubbib.backend.domain.manage.role.mapper.RoleManageMapper">
 
+    <!-- 공통 검색 조건 -->
+    <sql id="searchType">
+        <if test="KEYWORD != null and KEYWORD != ''">
+            <choose>
+                <when test='SEARCH_TYPE == "ROLE_CODE"'>
+                    AND ROLE_CODE LIKE CONCAT('%', #{KEYWORD}, '%')
+                </when>
+
+                <when test='SEARCH_TYPE == "ROLE_NAME"'>
+                    AND ROLE_NAME LIKE CONCAT('%', #{KEYWORD}, '%')
+                </when>
+
+                <otherwise>
+                    AND (
+                    ROLE_CODE LIKE CONCAT('%', #{KEYWORD}, '%')
+                    OR ROLE_NAME LIKE CONCAT('%', #{KEYWORD}, '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+
+        <if test="USE_YN != null and USE_YN != ''">
+            AND USE_YN = #{USE_YN}
+        </if>
+    </sql>
+
+    <!-- ================================================================================================================================================================================================================================================ -->
+
+    <!-- 전체 건수 조회 -->
+    <select id="countRoleList" resultType="long">
+        SELECT COUNT(*)
+        FROM TB_ROLE_MANAGE
+        WHERE DELETED_AT IS NULL
+        <include refid="searchType"/>
+    </select>
+
+    <!-- 역할 목록 조회 -->
+    <select id="selectRoleList"
+            resultType="com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO">
+        SELECT ROLE_CODE,
+        ROLE_NAME,
+        DESCRIPTION,
+        USE_YN
+        FROM TB_ROLE_MANAGE
+        WHERE DELETED_AT IS NULL
+        <include refid="searchType"/>
+        ORDER BY ROLE_CODE
+        LIMIT #{PER_PAGE} OFFSET #{OFFSET}
+    </select>
+
     <!-- 역할 조회 - ROLE_CODE -->
     <select id="selectRoleByRoleCode" resultType="com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO">
         SELECT ROLE_CODE,
@@ -11,17 +61,6 @@
                USE_YN
         FROM TB_ROLE_MANAGE
         WHERE DELETED_AT IS NULL
-    </select>
-
-    <!-- 역할 목록 조회 -->
-    <select id="selectRoleList" resultType="com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO">
-        SELECT ROLE_CODE,
-               ROLE_NAME,
-               DESCRIPTION,
-               USE_YN
-        FROM TB_ROLE_MANAGE
-        WHERE DELETED_AT IS NULL
-        ORDER BY ROLE_CODE
     </select>
 
     <!-- 역할 추가 -->

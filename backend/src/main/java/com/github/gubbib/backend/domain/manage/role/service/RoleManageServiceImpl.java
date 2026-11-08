@@ -1,5 +1,6 @@
 package com.github.gubbib.backend.domain.manage.role.service;
 
+import com.github.gubbib.backend.common.DTO.PageResponseDTO;
 import com.github.gubbib.backend.domain.manage.role.DTO.RoleSaveRequestDTO;
 import com.github.gubbib.backend.domain.manage.role.DTO.RoleResponseDTO;
 import com.github.gubbib.backend.domain.manage.role.mapper.RoleManageMapper;
@@ -56,8 +57,33 @@ public class RoleManageServiceImpl implements RoleManageService {
      * @return
      */
     @Override
-    public List<RoleResponseDTO> selectRoleList(CustomUserDetails userDetails) {
-        return roleManageMapper.selectRoleList(userDetails);
+    public PageResponseDTO<RoleResponseDTO> selectRoleList(CustomUserDetails userDetails, int page, int perPage, String searchType, String keyword, String useYn) {
+        if (page < 1 || perPage < 1) {
+            // 기존 프로젝트의 잘못된 요청 오류 코드로 맞춰줘.
+            throw new BusinessException(ErrorCode.INVALID_PAGINATION);
+        }
+        long offset = ((long) page - 1) * perPage;
+
+        long totalCount = roleManageMapper.countRoleList(
+                searchType,
+                keyword,
+                useYn
+        );
+
+        List<RoleResponseDTO> list = roleManageMapper.selectRoleList(
+                searchType,
+                keyword,
+                useYn,
+                perPage,
+                offset
+        );
+
+        return new PageResponseDTO<>(
+                totalCount,
+                page,
+                perPage,
+                list
+        );
     }
 
     /**
