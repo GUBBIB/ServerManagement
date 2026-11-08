@@ -17,6 +17,7 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON_004", "지원하지 않는 HTTP 메서드입니다."),
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON_005", "요청한 리소스를 찾을 수 없습니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "COMMON_006", "접근 권한이 없습니다."),
+    INVALID_PAGINATION(HttpStatus.BAD_REQUEST, "COMMON_007", "페이지 번호와 페이지당 조회 건수는 1 이상이어야 합니다."),
 
     // ===== JWT =====
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT_001", "만료된 토큰입니다."),
@@ -36,6 +37,7 @@ public enum ErrorCode {
 
     // ===== ROLE =====
     ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ROLE_001", "ROLE을 찾을 수 없습니다."),
+
 
 
     ;
