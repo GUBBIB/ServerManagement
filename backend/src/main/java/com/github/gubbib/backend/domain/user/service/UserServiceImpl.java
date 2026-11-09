@@ -3,6 +3,7 @@ package com.github.gubbib.backend.domain.user.service;
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.role.service.RoleService;
 import com.github.gubbib.backend.domain.user.DTO.MyInfoResponseDTO;
+import com.github.gubbib.backend.domain.user.DTO.PasswordChangeRequestDTO;
 import com.github.gubbib.backend.domain.user.mapper.UserMapper;
 import com.github.gubbib.backend.exception.BusinessException;
 import com.github.gubbib.backend.exception.ErrorCode;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +27,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final SqlSessionTemplate batchSqlSessionTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(
             UserMapper userMapper,
-            SqlSessionTemplate batchSqlSessionTemplate
-    ) {
+            SqlSessionTemplate batchSqlSessionTemplate,
+            PasswordEncoder passwordEncoder) {
         this.userMapper = userMapper;
         this.batchSqlSessionTemplate = batchSqlSessionTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -77,16 +81,33 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public MyInfoResponseDTO getMyInfo(CustomUserDetails userDetails) {
-        LoginUserDTO user = selectUserByEmail(userDetails.getUsername());
+        LoginUserDTO user = selectUserByEmail(userDetails.getUser().email());
 
         return new MyInfoResponseDTO(
                 user.user_id(),
                 user.email(),
                 user.name(),
-                user.password(),
+                user.status(),
                 user.roles()
         );
     }
 
+    @Override
+    @Transactional
+    public void changePassword(CustomUserDetails userDetails, PasswordChangeRequestDTO requestDTO) {
+        LoginUserDTO user = selectUserByEmail(userDetails.getUser().email());
 
+        if (!passwordEncoder.matches(requestDTO.currentPassword(), user.password())) {
+            throw new BusinessException(ErrorCode.INVALID_CURRENT_PASSWORD);
+        }
+
+        String encodedPassword = passwordEncoder.encode(requestDTO.newPassword());
+
+        userMapper.changePassword(userDetails, encodedPassword);
+
+        /**
+         *  TODO 비밀번호 변경 후, 로그아웃 및 JWT Token 처리에 대해서 고민
+         *  AuthController에 로그아웃과 동일한 문제이다.
+        **/
+    }
 }

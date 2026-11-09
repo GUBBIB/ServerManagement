@@ -72,4 +72,13 @@
         WHERE USER_ID = #{USER_ID}
     </select>
 
+    <update id="changePassword">
+        UPDATE TB_USER_MANAGE
+        SET PASSWORD   = #{ENCODED_PASSWORD},
+            UPDATED_AT = NOW()
+
+        WHERE USER_ID = #{USER_DETAILS.id}
+          AND DELETED_AT IS NULL
+    </update>
+
 </mapper>
