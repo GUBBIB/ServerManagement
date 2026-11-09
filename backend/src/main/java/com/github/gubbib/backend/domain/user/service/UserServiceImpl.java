@@ -2,9 +2,11 @@ package com.github.gubbib.backend.domain.user.service;
 
 import com.github.gubbib.backend.domain.auth.DTO.LoginUserDTO;
 import com.github.gubbib.backend.domain.role.service.RoleService;
+import com.github.gubbib.backend.domain.user.DTO.MyInfoResponseDTO;
 import com.github.gubbib.backend.domain.user.mapper.UserMapper;
 import com.github.gubbib.backend.exception.BusinessException;
 import com.github.gubbib.backend.exception.ErrorCode;
+import com.github.gubbib.backend.security.details.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -66,4 +68,25 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectUserByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
+
+    /**
+     * [ 내 정보 조회 ]
+     *
+     * @param userDetails
+     * @return
+     */
+    @Override
+    public MyInfoResponseDTO getMyInfo(CustomUserDetails userDetails) {
+        LoginUserDTO user = selectUserByEmail(userDetails.getUsername());
+
+        return new MyInfoResponseDTO(
+                user.user_id(),
+                user.email(),
+                user.name(),
+                user.password(),
+                user.roles()
+        );
+    }
+
+
 }
