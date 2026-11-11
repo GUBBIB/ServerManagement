@@ -1,0 +1,18 @@
+$kind: http-request
+method: POST
+url: "{{base_url}}/api/v1/auth/signup"
+examples: .resources/Signup.resources/examples
+order: 1000
+auth:
+  type: noauth
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "user@example.com",
+      "password": "password123",
+      "name": "Hong Gildong",
+      "phone": "01012345678"
+    }

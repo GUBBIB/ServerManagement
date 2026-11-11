@@ -1,0 +1,6 @@
+$kind: collection
+name: Manage - Users
+description: |-
+  User management endpoints. Requires **ADMIN** role, or both **MANAGER** and
+  **USER_MANAGER** roles.
+order: 2000

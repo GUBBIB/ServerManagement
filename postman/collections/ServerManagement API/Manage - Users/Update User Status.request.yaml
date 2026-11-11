@@ -1,0 +1,18 @@
+$kind: http-request
+name: Update User Status
+method: PATCH
+url: '{{base_url}}/api/v1/manage/users/{{userId}}/status'
+order: 3000
+pathVariables:
+  - key: userId
+    value: '1'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "status": "ACTIVE",
+      "reason": ""
+    }

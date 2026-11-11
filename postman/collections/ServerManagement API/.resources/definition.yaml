@@ -1,0 +1,22 @@
+$kind: collection
+description: |-
+  API collection for the ServerManagement Spring Boot backend.
+
+  Base URL: http://localhost:8081
+
+  ## Authentication
+  Most endpoints require a Bearer token. Use the **Login** request to obtain an
+  access token — it is automatically saved to the `access_token` collection
+  variable and used by all subsequent requests.
+
+  ## Folders
+  - **Auth** – public sign-up / login endpoints + signup status check
+  - **Manage - Users** – admin-only user approval / rejection / status update
+  - **Manage - Roles** – admin-only role CRUD
+variables:
+  base_url: http://localhost:8081
+  access_token: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{access_token}}"

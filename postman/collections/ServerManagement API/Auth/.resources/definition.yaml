@@ -1,0 +1,4 @@
+$kind: collection
+name: Auth
+description: Public authentication endpoints — sign-up, login, and signup status check.
+order: 1000

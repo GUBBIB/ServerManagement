@@ -1,0 +1,20 @@
+$kind: http-request
+name: Update Role
+method: PATCH
+url: '{{base_url}}/api/v1/manage/roles/{{roleCode}}'
+order: 3000
+pathVariables:
+  - key: roleCode
+    value: 'ROLE_VIEWER'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "role_code": "ROLE_VIEWER",
+      "role_name": "Viewer",
+      "description": "Read-only access role (updated)",
+      "use_yn": "Y"
+    }

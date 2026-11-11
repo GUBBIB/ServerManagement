@@ -1,0 +1,4 @@
+$kind: collection
+name: User
+description: 로그인한 사용자 본인의 정보 조회 및 비밀번호 변경 엔드포인트.
+order: 4000

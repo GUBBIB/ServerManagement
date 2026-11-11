@@ -1,0 +1,18 @@
+$kind: http-request
+name: Get Signup Request List
+method: GET
+url: '{{base_url}}/api/v1/manage/users/signup/?page=1&perPage=10&searchType=ALL&keyword='
+order: 500
+queryParams:
+  - key: page
+    value: '1'
+    description: '조회 페이지 (default: 1)'
+  - key: perPage
+    value: '10'
+    description: '페이지당 조회 개수 (default: 10)'
+  - key: searchType
+    value: ALL
+    description: '검색 타입: ALL | 이름 | 이메일 | 휴대폰 번호 (default: ALL)'
+  - key: keyword
+    value: ''
+    description: '검색어 (default: 빈 문자열)'

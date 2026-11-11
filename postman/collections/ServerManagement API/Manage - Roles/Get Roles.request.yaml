@@ -1,0 +1,21 @@
+$kind: http-request
+name: Get Roles
+method: GET
+url: '{{base_url}}/api/v1/manage/roles/?page=1&perPage=10&searchType=ALL&keyword=&useYn='
+order: 1000
+queryParams:
+  - key: page
+    value: '1'
+    description: '조회 페이지 (default: 1)'
+  - key: perPage
+    value: '10'
+    description: '페이지당 조회 개수 (default: 10)'
+  - key: searchType
+    value: ALL
+    description: '검색 타입: ALL | 역할명 | 역할 코드 (default: ALL)'
+  - key: keyword
+    value: ''
+    description: '검색어 (default: 빈 문자열)'
+  - key: useYn
+    value: ''
+    description: '사용 여부 필터: Y | N | 빈 문자열=전체 (default: 빈 문자열)'

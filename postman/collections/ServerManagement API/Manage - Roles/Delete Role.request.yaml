@@ -1,0 +1,8 @@
+$kind: http-request
+name: Delete Role
+method: DELETE
+url: '{{base_url}}/api/v1/manage/roles/{{roleCode}}'
+order: 4000
+pathVariables:
+  - key: roleCode
+    value: 'ROLE_VIEWER'

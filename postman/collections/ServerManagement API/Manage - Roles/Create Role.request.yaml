@@ -1,0 +1,17 @@
+$kind: http-request
+name: Create Role
+method: POST
+url: '{{base_url}}/api/v1/manage/roles/'
+order: 2000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "role_code": "ROLE_VIEWER",
+      "role_name": "Viewer",
+      "description": "Read-only access role",
+      "use_yn": "Y"
+    }

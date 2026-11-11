@@ -1,0 +1,6 @@
+$kind: collection
+name: Manage - Roles
+description: |-
+  Role management endpoints. Requires **ADMIN** role, or both **MANAGER** and
+  **ROLE_MANAGER** roles.
+order: 3000
