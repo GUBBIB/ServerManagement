@@ -7,6 +7,7 @@ public record LoginUserDTO(
         String email,
         String password,
         String name,
+        String phone
         String status,
         List<String> roles
 ) {
