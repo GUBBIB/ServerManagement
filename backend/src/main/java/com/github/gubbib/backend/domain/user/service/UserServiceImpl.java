@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
                 user.email(),
                 user.name(),
                 user.status(),
+                user.phone(),
                 user.roles()
         );
     }
