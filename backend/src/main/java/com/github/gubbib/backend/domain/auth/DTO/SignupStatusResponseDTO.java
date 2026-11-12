@@ -7,6 +7,7 @@ public record SignupStatusResponseDTO(
         String email,
         String name,
         String status,
+        String phone,
         String rejection_reason
 ) {
 }
