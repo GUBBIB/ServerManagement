@@ -36,6 +36,7 @@
             EMAIL,
             NAME,
             STATUS,
+            PHONE,
             REASON
         FROM TB_USER_MANAGE
         WHERE USER_ID = #{USER_DETAILS.id}
