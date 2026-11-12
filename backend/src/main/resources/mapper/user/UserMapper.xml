@@ -11,6 +11,7 @@
             <arg column="EMAIL" javaType="java.lang.String"/>
             <arg column="PASSWORD" javaType="java.lang.String"/>
             <arg column="NAME" javaType="java.lang.String"/>
+            <arg column="PHONE" javaType="java.lang.String"/>
             <arg column="STATUS" javaType="java.lang.String"/>
 
             <arg column="USER_ID"
@@ -20,9 +21,7 @@
     </resultMap>
 
     <!-- 유저 역할 조회 -->
-    <select id="selectRolesByUserId"
-            parameterType="java.lang.Long"
-            resultType="java.lang.String">
+    <select id="selectRolesByUserId" parameterType="java.lang.Long" resultType="java.lang.String">
         SELECT ROLE_CODE
         FROM TB_USER_ROLE_MANAGE
         WHERE USER_ID = #{USER_ID}
@@ -30,7 +29,7 @@
         ORDER BY ROLE_CODE
     </select>
 
-    <!-- status = [ ACTIVE, PENDING ] 인 유저 조회 -->
+    <!-- status = [ ACTIVE, PENDING ] 인 유저 조회 --> <!-- 사용 안 하는 코드 삭제 필요 -->
     <select id="selectActiveAndPendingUserByEmail" resultMap="loginUserResultMap">
         SELECT USER_ID,
                EMAIL,
@@ -56,6 +55,7 @@
                EMAIL,
                PASSWORD,
                NAME,
+               PHONE,
                STATUS
         FROM TB_USER_MANAGE
         WHERE EMAIL = #{EMAIL}
@@ -67,6 +67,7 @@
                EMAIL,
                PASSWORD,
                NAME,
+               PHONE,
                STATUS
         FROM TB_USER_MANAGE
         WHERE USER_ID = #{USER_ID}
