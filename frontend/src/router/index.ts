@@ -9,29 +9,23 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/login', name: 'login', component: Login },
-
-    {
-      path: '/account-status',
-      name: 'account-status',
-      component: AccountStatus,
-      meta: { requiresLogin: true },
-    },
-
+    
     {
       path: '/',
-      meta: { requiresActive: true },
+      meta: { requiresLogin: true },
 
       children: [
         { path: '', redirect: { name: 'login' } },
-        { path: 'dashboard', name: 'dashboard', component: Dashboard },
-        { path: 'my-page', name: 'my-page', component: MyPage },
+        { path: '/account-status', name: 'account-status', component: AccountStatus },
+        { path: '/dashboard', name: 'dashboard', component: Dashboard },
+        { path: '/my-page', name: 'my-page', component: MyPage },
       ],
     },
   ],
 })
 
 router.beforeEach((to) => {
-  if (!to.meta.requiresLogin && !to.meta.requiresActive) {
+  if (!to.meta.requiresLogin) {
     return
   }
 
@@ -41,7 +35,7 @@ router.beforeEach((to) => {
     return { name: 'login' }
   }
 
-  if (to.meta.requiresActive && session.status !== 'ACTIVE') {
+  if (session.status !== 'ACTIVE' && to.name !== 'account-status') {
     return { name: 'account-status' }
   }
 })
